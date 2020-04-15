@@ -39,7 +39,7 @@ WHERE  NOMBRE_SUCURSAL LIKE '%n%';
 
 
 ### Prioridad
-![Imagen Prioridad]
+![](imagenes/prioridad.png)
 
 
 ### ORDER BY
@@ -90,6 +90,10 @@ Ej 3: Concatenando a variable leida:
 ```sql
 SELECT * FROM CLIENTE WHERE CIUDADCLIENTE='&X.s';
 ```
+
+Ej4: Usando en columnas y where
+
+![](imagenes/sustitucion.jpg)
 
 ## Define and undefine
 
