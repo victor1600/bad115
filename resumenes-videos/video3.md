@@ -15,7 +15,7 @@ where LOWER(last_name) = 'higgins';
 ```
 
 ## Numericas
-![](imagenes/numericas.jpg)
+![](imagenes/numericas.png)
 
 ### Fechas
 - Formato por detecto
@@ -30,6 +30,6 @@ FROM dual;
 > Puede ser tambien CurrentDate.
 
 #### Funciones de Fechas
-![](imagenes/fechas.jpg)
-![](imagenes/fechas2.jpg)
-![](imagenes/fechas3.jpg)
+![](imagenes/fechas.png)
+![](imagenes/fechas2.png)
+![](imagenes/fechas3.png)
