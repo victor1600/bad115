@@ -315,3 +315,94 @@ WHERE index_name = 'LNAME_I DX';
 ```sql
 DROP INDEX emp_last_name_idx
 ```
+
+# Video 3. Creacion de Vistas
+
+- La vista es un subconjunto de informacion que ponemos tener en tablas base.**
+- Las tablas base las construimos en los esquemas de las bases de datos**
+
+## Ventajas de las vistas
+- Restringir acceso a los datos
+- Hace consultas complejas faciles
+- Proporciona independencia de datos
+- Presenta diferentes vistas de los mismos datos
+
+## Vistas simples y complejas
+![](imagenes/vistas.png)
+
+#### Creacion de vista
+*Crear la vista EMPVU80, que contiene detalle de los empleados del departamento 80*
+```sql
+CREATE VIEW empvu80
+ AS SELECT employee_id, last_name, salary
+ FROM   employees
+ WHERE  department_id = 80;
+```
+*Describir la consulta de la vista*
+```sql
+DESCRIBE empvu80;
+```
+#### Modificacion de vista
+- CREATE OR REPLACE VIEW son las clausulas para modificar una vista
+```sql
+CREATE OR REPLACE VIEW empvu80
+ (id_number, name, sal, department_id)
+AS SELECT employee_id, first_name || '' || last_name, salary, department_id
+FROM   employees
+WHERE  department_id = 80;
+```
+
+## Creacion de Vista Completa
+
+*Crear una vista compleja que contiene las funciones de grupo para mostrar los valores de dos tablas*
+```sql
+CREATE OR REPLACE VIEW dep_sum_vu
+ (name, minsal, maxsal, avgsal)
+AS SELECT d.deparment_name, MIN(e.salary),
+          MAX(e.salary), AVG(e.salary)
+FROM      employees e JOIN departments d
+ON        (e.department_id = d.department_id)
+GROUP BY  d.department_name;
+```
+#### Informacion de las vistas
+```sql
+DESCRIBE user_views
+```
+```sql
+SELECT view_name FROM user_views;
+```
+```sql
+SELECT text FROM user_views
+WHERE view_name = 'EMP_DETAILS_VIEW';
+```
+
+## Reglas para la realizacion de operaciones DML en una vista
+
+- No se puede eliminar ni modificar una vista si la fila contiene
+  - funciones de grupo
+  - clausula GROUP BY
+  - la palabra DISTINCT
+  - la palabra reservada ROWNUM
+
+- No se pueden agregar datos a una vista si la vista contiene:
+  - funciones de grupo
+  - clausula GROUP BY
+  - la palabra DISTINCT
+  - la palabra reservada ROWNUM
+  - columnas definidas por las expresiones
+  - columnas NOT NULL sin valor por defecto en las tablas de base que no estan seleccionados por la vista
+
+## Uso de la clausula WITH CHECK OPTION
+- Asegura que las operaciones DML se realizaron en la estancia de la vista en el dominio de la vista.
+
+![](imagenes/withcheck.png)
+
+## Denegar operaciones DML
+- Se puede asegurar que no hayan operaciones de DML mediante la opcion WITH READ ONLY
+![](imagenes/denegardml.png)
+
+## Eliminar una vista
+```sql
+DROP VIEW empvu80
+```
+
