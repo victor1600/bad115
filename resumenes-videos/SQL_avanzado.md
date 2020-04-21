@@ -12,7 +12,9 @@
 ![](imagenes/estructuradiccio.png)
 
 #### Convencion de la nomenclatura
+
 *Prefijos USER, ALL, DBA, V$*
+
 ![](imagenes/pref.png)
 
 ## Como usar el diccionario vistas
@@ -399,6 +401,7 @@ WHERE view_name = 'EMP_DETAILS_VIEW';
 
 ## Denegar operaciones DML
 - Se puede asegurar que no hayan operaciones de DML mediante la opcion WITH READ ONLY
+
 ![](imagenes/denegardml.png)
 
 ## Eliminar una vista
@@ -406,3 +409,84 @@ WHERE view_name = 'EMP_DETAILS_VIEW';
 DROP VIEW empvu80
 ```
 
+# Video 4. Gestionando Objetos de Esquemas
+
+## Adicionando una restriccion
+![](imagenes/adicionando.png)
+
+## Borrando un constraint
+- utilizando DROP CONSTRAINT
+
+![](imagenes/dropcons.png)
+
+#### Dropiando un constraint ONLINE osea en vivo
+![](imagenes/online.png)
+
+## Clausula ON DELETE
+![](imagenes/cascade.png)
+
+#### Restricciones en cascada 
+![](imagenes/restrcc.png)
+
+*Ejemplos de restricciones en cascada*
+
+![](imagenes/cascadeejem.png)
+
+## Renombrando columnas de tablas y restricciones
+![](imagenes/rename.png)
+
+#### Deshabilitando restricciones
+![](imagenes/disable.png)
+
+#### Habilitando restricciones
+- ENABLE CONSTRAINT
+
+## Deferring constraints
+![](imagenes/deferring.png)
+
+#### Diferencia entre INITIALY DEFERRED y INITIALY INMEDIATE
+![](imagenes/diff.png)
+
+## DROP TABLE... PURGE
+- Ademas de que dropea, libera el espacio disponible que tengamos de nuestros segmentos a nivel de nuestro table spaces que estemos trabajando
+- Limpia la tabla
+```sql
+DROP TABLE emp_new_sal PURGE;
+```
+
+## Tablas temporales
+- Existen en la BD durante la duracion de la transaccion o sesion que tengamos
+- Son definidas de manera estatica a nivel de la metadata o el diccionario de la base de datos
+
+*El carrito en una aplicacion en linea esta temporalmente en una cola*
+
+*Cada articulo representa una fila que temporalmente esta en la tabla*
+
+*Los datos que yo este eligiendo en el carrito estan de manera privada en mi sesion*
+
+*Entonces las tablas temporables son tablas privadas a nivel de sesion*
+
+*Al hacer el pago la aplicacion mueve esas filas que elegi en el carrito, y las coloca en una tabla permanente, y al finalizar la sesion esos datos en la tabla temporal son borrados*
+
+![](imagenes/temp.png)
+
+#### Creando una tabla temporal con CREATE GLOBAL TEMPORARY TABLE
+![](imagenes/tablatemp.png)
+
+## Tablas Externas
+#### Creando un directorio de tablas externas
+![](imagenes/dirtable.png)
+
+#### Creando una tabla externa
+![](imagenes/tablaext.png)
+
+#### Creando una tabla externa utilizando ORACLE_LOADER 
+![](imagenes/loader.png)
+
+## Consultando tablas externas
+- Sintacticamente la estructura esta en nuestra base 
+
+![](imagenes/consultext.png)
+
+## Creando Tabla externa usando ORACLE_DATAPUMP: 
+![](imagenes/oracle.png)
