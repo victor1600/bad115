@@ -490,3 +490,63 @@ DROP TABLE emp_new_sal PURGE;
 
 ## Creando Tabla externa usando ORACLE_DATAPUMP: 
 ![](imagenes/oracle.png)
+
+# Video 5. "Recuperacion de datos mediante subconsultas"
+
+## Recuperacion de datos mediante una subconsulta como una fuente
+![](imagenes/recuperacion.png)
+
+#### Ejemplo de recuperancion de datos usando Vista
+![](imagenes/usandovista.png)
+
+## Subconsultas con multiples columnas
+![](imagenes/multiple.png)
+
+## Comparacion de Subconsultas pares
+![](imagenes/consupar.png)
+
+## Comparacion con Subconsulta No Par
+![](imagenes/nopar.png)
+
+## Expresiones Subconsulta Escalar
+![](imagenes/escalar.png)
+
+#### Ejemplos de subconsulta escalar
+ ![](imagenes/subescalar.png)
+
+## Subconsultas Correlacionadas
+ ![](imagenes/correlacion.png)
+
+#### Sintaxis de la consulta correlacionada
+ ![](imagenes/sincorre.png)
+
+*Buscar todos los empleados que ganan mas que el salari medio en su departamento*
+
+ ![](imagenes/ejcorr.png)
+
+*Mostrar detalle de aquellos empleados que han cambiado puestos de trabajo por lo menos dos veces*
+
+ ![](imagenes/puesto.png)
+
+ ## Usando operados EXIST
+ ![](imagenes/exist.png)
+
+ #### Ejemplo de operador EXIST
+
+ ![](imagenes/emploex.png)
+
+#### Encontrar todos los departamentos que no tienen empleados
+ ![](imagenes/noexist.png)
+
+## Clausula WITH
+ ![](imagenes/with.png)
+
+*Mostrar los nombres del departamento y salarios totales para aquellos departamentos cuyo salario total es mayor que el salario promedio de todos los departamentos*
+
+ ![](imagenes/ejemwith.png)
+
+ ## Clausula WITH Recursiva
+ ![](imagenes/withrecurs.png)
+
+#### Ejemplo de WITH Recursiva
+ ![](imagenes/ejemrec.png)
