@@ -116,6 +116,12 @@ DESC cliente
 ##### Lower
 ![](imagenes/Screenshot%20from%202020-04-20%2023-17-55.png)
 
+## InitCap
+```sql
+select initcap(first_name || ' ' || last_name)
+from employees where department_id = 30;
+```
+
 #### caracter
 ![](imagenes/Screenshot%20from%202020-04-20%2023-17-33.png)
 ![](imagenes/Screenshot%20from%202020-04-20%2023-18-27.png)
@@ -131,6 +137,7 @@ DESC cliente
 ![](imagenes/Screenshot%20from%202020-04-20%2023-23-17.png)
 #### TRunc
 ![](imagenes/Screenshot%20from%202020-04-20%2023-23-30.png)
+
 
 #### MOD
 ![](imagenes/Screenshot%20from%202020-04-20%2023-24-05.png)
