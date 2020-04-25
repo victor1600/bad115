@@ -2,8 +2,8 @@
 
 ## Prerrequisites
 
-- [Docker] (https://docs.docker.com/engine/install/ubuntu/) 
-- [jdk 11](https://dev.to/thegroo/install-and-manage-multiple-java-versions-on-linux-using-alternatives-5e93) 
+[Docker] (https://docs.docker.com/engine/install/ubuntu/) 
+[jdk 11](https://dev.to/thegroo/install-and-manage-multiple-java-versions-on-linux-using-alternatives-5e93) 
 
 ## Install Oracled docker:
 
@@ -41,7 +41,7 @@ https://docs.oracle.com/database/121/COMSC/installation.htm#COMSC001
 - Download rpm file: 
 
 ## Set up sql developer
-- [download rpm] (https://www.oracle.com/tools/downloads/sqldev-v192-downloads.html)
+[download rpm] (https://www.oracle.com/tools/downloads/sqldev-v192-downloads.html)
 ```shell script
 sudo add-apt-repository universe
 sudo apt-get update
