@@ -27,7 +27,7 @@ psql -U postgres
 
 - **Basic commands**
     - ```\l``` List db's 
-    - ```CREATE DATABASE bad115 ENCODING 'utf8'``` ```
+    - ```CREATE DATABASE bad115 ENCODING 'utf8'``` 
     - ```\c demodb``` connect to demodb database
     - ```\dt``` look for tables in db
     - ```\d tablename``` to describe a table
