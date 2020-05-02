@@ -27,10 +27,11 @@ psql -U postgres
 
 - **Basic commands**
     - ```\l``` List db's 
-    - ```CREATE DATABASE demodb;```
+    - ```CREATE DATABASE bad115 ENCODING 'utf8'``` ```
     - ```\c demodb``` connect to demodb database
     - ```\dt``` look for tables in db
     - ```\d tablename``` to describe a table
+    
 - Run application.
 
 You will see inside docker:
