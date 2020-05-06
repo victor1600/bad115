@@ -28,8 +28,7 @@ docker exec -it oracle bash -c "source /home/oracle/.bashrc; sqlplus /nolog"
 
 - Create user and gran privilegies:
 
-```
-sql
+```sql
  alter session set "_ORACLE_SCRIPT"=true;
  create user dummy identified by dummy;
  GRANT ALL PRIVILEGES TO dummy;
