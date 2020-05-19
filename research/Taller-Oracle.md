@@ -20,8 +20,29 @@ Directorio Oracle
 LOB_PATH = '/oracle/lob'
 
 
-- Definir donde en la BD voy a almacenar mis tablas. La zona de almacenamiento. Creamos  ```TABLESPACE```.
+- **Paso 0**: Definir donde en la BD voy a almacenar mis tablas. La zona de almacenamiento. Creamos  ```TABLESPACE```.
     - Cerciorarse que existe la carpeta en donde creare mi .DBF
+
+- **Paso 1**: creamos tabla dentro del tablespace deseado.
+
+- **Paso 5**: no podemos insertar  un texto en un campo BLOB, es incorrecto, da un erro.
+
+- **Paso 6**:
+Todo registro que tiene un campo tipo LOB, tiene que tener un **localizador**
+y una zona de almacenamiento donde estara verdaderamente el dato tipo LOB
+
+> Toda tabla con campo tipo LOB, cada registro insertado debe tener un localizador: Se localiza el archivo binario(Video, sonido) asociado al registro
+
+
+
+
+
+
+
+
+
+
+
 
 
 ### Decargando la maquina virtual
