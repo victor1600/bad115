@@ -1,17 +1,32 @@
-## Taller Oracle
+# Taller Oracle BLOB
 
-- BFILE: Solo guarda la ruta donde se encuentra fisicamente un archivo
-- BLOB: Guarda un archivo video en la base de datos
-- CLOB: Character long object, 4 GB.
-- NLON
+
+# LOB
+Large Object. Almacenan datos grandes no estructurados como texto, imagenes graficas, peliculas,etc 
+
+- **LOB INTERNOS**
+    - BLOB: Binarios
+    - CLOB: Objeto grande de caracteres
+    - NCLOB: Almacena caracteres y binarios
+
+- **LOB EXTERNOS**:
+    - BFILE: Solo guarda la ruta donde se encuentra fisicamente un archivo en el OS.
+
+[BFILE](images-taller/BFILE.png)
 
 ### Como se guardan los LOB(CLOB,BLOB,NLOB)?
-- Se Incorpora un localizador dentro del Datafile de Oracle, que indica donde esta el archivo tipo LOB.
+Los lOB incorporan un localizador. Imaginemos que tenemos una tabla de empleados,
+que contiene su nombre y su contrato PDF, la data no esta junta, sino que el archivo binario
+PDF estara en otra parte dentro de la misma BD. El Localizador dice: "El archivo tipo LOB esta en este lado".
+
+> Al insertar, se inserta un localizador que apunta a la zona donde esta el archivo binario
+
 
 ### Como trabaja el BFILE?
 - No lo guarda en la BD, se guarda la ruta del archivo dentro de la base de datos, pero el sistema esta 
 externo, afuera de la BD. La desventaja es que no hay seguridad
 
+> La carpeta donde se guarden externamente los archivos debe ser declarada en oracle, de otra manera no podremos referenciar
 
 ### Ejercicio: Trabajando con BFILE
 
@@ -37,14 +52,3 @@ y una zona de almacenamiento donde estara verdaderamente el dato tipo LOB
 
 
 
-
-
-
-
-
-
-
-
-### Decargando la maquina virtual
-
-Password: Server01
