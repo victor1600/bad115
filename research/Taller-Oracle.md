@@ -395,7 +395,7 @@ Si dejamos que sea dinamico el espacio asignado a las tablas, se fragementan dem
 ## Ejemplo propio
 
 - Creamos carpeta con contenidos:
-[folder](images-taller/folder)
+[folder](images-taller/folder.jpg)
 
 Creando BLOB para guardar pdfs de recetas
 
