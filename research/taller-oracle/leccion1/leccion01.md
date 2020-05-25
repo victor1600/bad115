@@ -97,6 +97,30 @@ ALTER TABLESPACE TBS_VENTAS
 ADD DATAFILE 'C:\BDORACLE\DF_VENTAS_02.DBF' SIZE 10M;
 ```
 
-> Cuando agregamos 2 DF, Oracle hace el balanceo
+> Cuando agregamos 2 DF, Oracle balance la carga entre ellos de los registros que se van agregando.
 
 - Connect by level limita cuantos registros vamos a generar
+
+
+### Borrar un tablesapce
+
+```sql
+DROP TABLESPACE TBS_VENTAS
+INCLUDING CONTENTS AND DATAFILES;
+```
+
+### Distribucion
+
+Oracle tiene tablas clusterizadas, particionadas, etc. Las tablas particionadas nos sirven para guardar en diferentes discos
+discos.
+
+> Podemos crear tablespaces de solo lectura.
+
+> Se recomienda crear para una tabla grande un tablespace solo para ella.
+
+
+### Implementar mejoras en oracle
+Revisar diseño
+Revisar sentencias sql
+Revisar configuracion de servidor de BD
+Evalual infraestructura
