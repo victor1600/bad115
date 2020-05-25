@@ -120,14 +120,182 @@ END;
 INSERT INTO MASCOTAS VALUES(4,'CLAUDIO', BFILENAME('FICHEROS','Gatito04.jpg'));
 ```
 
+## Leccion 03
+
+### Uso de funcion para obtener size de una imagen
+
+> Esto nos ayuda para controlar el size permitido de los archivos a cargar
+
+- Declaro parametros de entrada de la funcion, uno es el nombre del directorio, que se llama "ficheros"(directorio oracle) y el nombre (codigo) de la imagen
+- Declaro despues de ```return`` el tipo de dato que voy a retornar
+- Declaro variables despues de is
+- Begin:
+    - Creo un string en fichero
+    - Cargo en variable foto con la funcion ```bfilename``` la foto dentro del directorio
+    - Si existe, retornar el peso en bytes de ese archivo binario.
 
 
+```sql
+-- 1. PAQUETE DBMS_LOB
+
+CREATE TABLE CLIENTES
+(
+CODIGO NUMBER,
+NOMBRE VARCHAR2(100),
+FOTO BFILE,
+LONGITUD NUMBER);
+
+INSERT INTO CLIENTES VALUES ( 1,'ROSA',NULL,NULL);
+INSERT INTO CLIENTES VALUES ( 2,'PEDRO',NULL,NULL); 
+INSERT INTO CLIENTES VALUES ( 3,'ANTONIO',NULL,NULL); 
+INSERT INTO CLIENTES VALUES ( 4,'RAUL',NULL,NULL); 
+
+SELECT * FROM CLIENTES;
+
+-- 2. OBTENER TAMAÑO DE ARCHIVO
+--     Envio de directorio y id de archivo
+CREATE OR REPLACE FUNCTION TAM (DIRECTORIO VARCHAR2, CODIGO NUMBER)
+RETURN NUMBER
+IS
+    FICHERO VARCHAR2(100);
+    FOTO BFILE;
+BEGIN
+    FICHERO:='Cliente0'||CODIGO||'.jpg';
+    
+    FOTO:=BFILENAME(DIRECTORIO,FICHERO);
+    
+    IF DBMS_LOB.FILEEXISTS(FOTO)=1 THEN
+        RETURN DBMS_LOB.GETLENGTH(FOTO);
+    ELSE
+        RETURN 0;
+    END IF;
+END;
+
+-- PROBANDO LA FUNCION ( Retorna tamaño del archivo en bytes )
+EXECUTE DBMS_OUTPUT.PUT_LINE(TAM('FICHEROS',2)); 
+
+-- 3. STORE PROCEDURE :: CARGA IMAGEN EN CAMPO FOTO
+CREATE OR REPLACE PROCEDURE SPU_CARGA_CLIENTES
+IS
+	CURSOR CLI IS SELECT * FROM CLIENTES FOR UPDATE;
+	FICHERO VARCHAR2(100);
+BEGIN
+	FOR C1 IN CLI LOOP
+		FICHERO:= 'CLIENTE0'||C1.CODIGO||'.JPG';
+
+		UPDATE CLIENTES 
+		SET FOTO=BFILENAME( 'FICHEROS',FICHERO),
+            LONGITUD=TAM('FICHEROS',C1.CODIGO)
+		WHERE CURRENT OF CLI;
+		
+	END LOOP;
+END;
+/
+-- Ejecutando Store Procedure
+EXECUTE SPU_CARGA_CLIENTES;
+
+SELECT * FROM CLIENTES;
+```
+
+- Probar funcion
+
+```sql
+-- PROBANDO LA FUNCION ( Retorna tamaño del archivo en bytes )
+EXECUTE DBMS_OUTPUT.PUT_LINE(TAM('FICHEROS',2)); 
+```
+
+### Procedimiento almacenado para cargar fotos
+ > cursores llevan una query a memoria para hacer un trabajo, leemos fila a file y hacemos un trabajo
+
+- En oracle declaro variables entre el IS y el BEGIN
+- Creamos cursor y le ponemos ```FOR UPDATE``` porque el cursor va a
+servir para actualizar
+- BEGIN:
+    - Iteramos por cada fila en el cursor
+        - Leemos el codigo del registro para armar el fichero, o nombre de la imagen a cargar.
+        - Cargamos en el campo foto.
+        - en campo longitud mandamos a llamar la funcion.
+        - ```WHERE CURRENT OF CLI```: Sentence que indica que se actualia el cliente (CLI) actual
+
+- Lo ejecutamos con ```execute```
+
+```sql
+-- 3. STORE PROCEDURE :: CARGA IMAGEN EN CAMPO FOTO
+CREATE OR REPLACE PROCEDURE SPU_CARGA_CLIENTES
+IS
+	CURSOR CLI IS SELECT * FROM CLIENTES FOR UPDATE;
+	FICHERO VARCHAR2(100);
+BEGIN
+	FOR C1 IN CLI LOOP
+		FICHERO:= 'CLIENTE0'||C1.CODIGO||'.JPG';
+
+		UPDATE CLIENTES 
+		SET FOTO=BFILENAME( 'FICHEROS',FICHERO),
+            LONGITUD=TAM('FICHEROS',C1.CODIGO)
+		WHERE CURRENT OF CLI;
+		
+	END LOOP;
+END;
+/
+-- Ejecutando Store Procedure
+EXECUTE SPU_CARGA_CLIENTES;
+```
+
+## Leccion 04: Campos BLOB
+
+- Alterar tabla para agregar campo BLOB
+- Ponerle como valor por defecto un ```empty_blob()```
 
 
+ - PROCEDIMIENTO
+    - cursor para actualizar
+    - variabels tipo bfile y blob
+    - Begin:
+        - Leo registro por registro
+            - Armo el nombre del archivo y lo pongo en la variable de archivo.
+            - En comentarios pongo el archivo pdf
+            - Abrir el archivo
+            - Crear una variable temporal binaria
+            - Cargo el contenido de bfile comentarios en temporal, especificando el size del archivo.
+            - Actualizamos el cursor
+            - **Cerrar el fichero**.
 
 
+```sql
+CREATE OR REPLACE PROCEDURE CARGA_COMENTARIOS
+IS
+    CURSOR CLI IS SELECT * FROM CLIENTES FOR UPDATE;
+    FICHERO VARCHAR2(100);
+    COMENTARIOS BFILE;
+    TEMPORAL BLOB;
+BEGIN
+    FOR C1 IN CLI LOOP 
+        --NOMBRE DEL FICHERO
+        FICHERO:='DOCUMENTO'||C1.CODIGO||'.PDF';
+        
+        --ASOCIAR EL FICHERO AL BFILE
+        COMENTARIOS:=BFILENAME('FICHEROS',FICHERO);
+        
+        --ABRIR EL FICHERO. ES OBLIGATORIO SI QUEREMOS USAR LOADFROMMFILE
+        DBMS_LOB.OPEN(COMENTARIOS,DBMS_LOB.LOB_READONLY);
+        
+        --ES NECESARIO CREAR UN LOB TEMPORAL, PARA INICIALIZAR EL LOCALIZARO
+        DBMS_LOB.CREATETEMPORARY(TEMPORAL,TRUE);
+        
+        -- CARGAMOS EL FICHERO A LA VARIABLE TEMPORAL 
+        DBMS_LOB.LOADFROMFILE(TEMPORAL,COMENTARIOS,DBMS_LOB.GETLENGTH(COMENTARIOS));
+        
+        --MODIFICAMOS LA COLUMNA DE LA TABLA
+        UPDATE CLIENTES SET CONTRATO=TEMPORAL WHERE CURRENT OF CLI;
+        
+        --CERRAMOS EL FICHERO
+        DBMS_LOB.CLOSE(COMENTARIOS);
+    END LOOP;
+END;
+/
 
-
+EXECUTE CARGA_COMENTARIOS;
+```
 
 
 
@@ -179,6 +347,13 @@ NOMBRE VARCHAR2(100),
 BIOGRAFIA CLOB) TABLESPACE TBS_CLOB;
 ```
 
+- Puedo insertar null en campos BFILE
+
+- Fragmentacion de tablas vs ponerla en una sola zona
+
+Si dejamos que sea dinamico el espacio asignado a las tablas, se fragementan demasiado y esto dificulta al hacer las consultas, ya que un select buscaria en cada pedazo de tablas hasta encontrar lo que desea,
+ en lugar de buscar en un solo bloque. Lo ideal es que los datos esten contiguos
 
 
+[fragmentadas](images-taller/fragmentadas.jpg)
 
