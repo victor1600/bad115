@@ -13,6 +13,8 @@ Oracle crea una zona que se llama SYSTEM y una SYSAUX, entre otros.
 Se recomienda crear una zona de almacenamiento logica(**Tablespaces**) para cada area de la empresa: RRHH, Comercial, inventario, etc.
 Todo eso se guarda en archivos fisicos(**Datafile**) que se asocian a un tablespaces.
 
+> Un TBS puede tener N Datafiles
+
 Por ejemplo:
 - Table space inventarios -> C:\bases\Inventarios01.DBF (10 MB)
 
@@ -57,3 +59,39 @@ SELECT * FROM DBA_TABLESPACES;
 -------------------------------------------
 SELECT FILE#, NAME FROM V$DATAFILE;    
 ```
+
+> SYSAUX y SYSTEM tienen autocrecimiento
+
+### Que hace cuando se llena un datafile
+
+1. Agregar un datafile
+2. Amplair un datafile
+
+
+## Direccionar tablas a un tablespace en particular
+
+```sql
+CREATE TABLE ARTICULO
+(ID INTEGER, DESCRIPCION CHAR(100)) TABLESPACE TBS_VENTAS;
+```
+
+### Alterar size de un datafile
+
+```sql
+--------------------------------------
+-- 6. MODIFICANDO TAMAÑO DE DATAFILES
+--------------------------------------
+ALTER DATABASE 
+DATAFILE 'C:\BDORACLE\DF_VENTAS_01.DBF'
+RESIZE 10M;
+```
+### Agregar nuevo datafile al tbs
+
+```sql
+----------------------------------
+-- 7. AGREGANDO UN NUEVO DATAFILE AL TBS
+----------------------------------
+ALTER TABLESPACE TBS_VENTAS
+ADD DATAFILE 'C:\BDORACLE\DF_VENTAS_02.DBF' SIZE 10M;
+```
+
