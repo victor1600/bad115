@@ -77,6 +77,8 @@ CREATE TABLE ARTICULO
 
 ### Alterar size de un datafile
 
+Defino un nuevo size.
+
 ```sql
 --------------------------------------
 -- 6. MODIFICANDO TAMAÑO DE DATAFILES
@@ -95,3 +97,6 @@ ALTER TABLESPACE TBS_VENTAS
 ADD DATAFILE 'C:\BDORACLE\DF_VENTAS_02.DBF' SIZE 10M;
 ```
 
+> Cuando agregamos 2 DF, Oracle hace el balanceo
+
+- Connect by level limita cuantos registros vamos a generar
