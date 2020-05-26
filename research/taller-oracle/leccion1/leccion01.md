@@ -124,3 +124,6 @@ Revisar diseño
 Revisar sentencias sql
 Revisar configuracion de servidor de BD
 Evalual infraestructura
+
+
+
