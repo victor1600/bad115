@@ -249,38 +249,6 @@ ALTER TABLE PRODUCTO MODIFY STOCK VISIBLE;
 ```
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-## Tablas clusterizadas
-
-En un bloque de datos, con tablas regulares, podemos tener registros de diferentes tablas.
-
-> Se almacenan cabecera y detalle amarradas en un mismo bloque.
-
 ### Crer tabla con misma estructura de la otra(Crer copia para pruebas por ejemplo)
 
 ```sql
@@ -300,3 +268,194 @@ ALTER TABLE FACTURA READ ONLY;
 ```sql
 ALTER TABLE FACTURA READ WRITE;
 ```
+
+
+# Tabla particionada
+
+> Uso: Para tablas que tendran gran voumen de informacion, millones de registros; por ejemplo la tabla comprobantes. Por lo general
+entre todo nuestro modelo de base de datos solo son como 4 o 5 que se comportan asi.
+
+> Como trabaja: 1 tabla logica, pero fisicamente son varias tablitas
+
+- Particionando por campo origen, determinara en que area se guardara.
+- Se crea una lista de valores aceptada para ese campo, por ejemplo: [asia,europa,AL]
+- Si hay un texto que no es de ninguna, se pondra en otras.
+- La data se comienza a segmenta
+
+![particionada](imagenes/particionada.jpg)
+
+
+> ¿Cuándo está recomendado usar tablas particionadas? de forma genérica, podríamos decir que es recomendable a partir de 1 millón de registros.
+
+### Paso 1 Crear TBS como particiones
+
+> Calcular size de TBS: Cuanto pesara un registro y calcular para 2 o 3 years
+
+Calculando peso para tabla ventas:
+
+number: 1o bytes
+origen: 20 bytes
+fecha: 10 byes
+Total: 50 bytes
+
+Cuantos registros en dos years?
+
+```sql
+----------------------------------
+-- 1. CREACION DE TBS
+----------------------------------
+CREATE TABLESPACE TBS_ASIA
+DATAFILE 'C:\TEMP\DF_COMPROBANTES_ASIA.DBF'
+SIZE 100M;
+
+CREATE TABLESPACE TBS_EUROPA
+DATAFILE 'C:\TEMP\DF_COMPROBANTES_EUROPA.DBF'
+SIZE 100M;
+
+CREATE TABLESPACE TBS_AL
+DATAFILE 'C:\TEMP\DF_COMPROBANTES_AL.DBF'
+SIZE 100M;
+
+CREATE TABLESPACE TBS_OTROS
+DATAFILE 'C:\TEMP\DF_COMPROBANTES_OTROS.DBF'
+SIZE 100M;
+```
+
+### Paso 2 Crear tabla particionada
+
+
+- Especificamos que es tabla particionada por ```list``` (Podria ser particionada por rango de valores, o oracle decida)
+- Identificamos el campo de la tabla que define criterio de almacenamiento, cuyo contenido pueda separarse en particiones, aqui elegimos el origen.
+- Declaro mis particiones
+
+```sql
+CREATE TABLE Ventas
+(ID NUMBER(10),
+ ORIGEN VARCHAR2(20),
+ FECHA DATE default sysdate )
+
+PARTITION BY LIST( ORIGEN)
+
+(PARTITION ventas_ASIA  VALUES('ASIA')    tablespace TBS_ASIA,
+ PARTITION ventas_EUROPA VALUES ('EUROPA') tablespace TBS_EUROPA,
+ PARTITION ventas_AL     VALUES ('AL')   tablespace TBS_AL,
+ PARTITION ventas_otros  VALUES(DEFAULT)   tablespace TBS_OTROS );
+
+```
+
+### insertando registros:
+
+- al hacer insert, dependiendo del valor que lleven en origen, se guardara en el tbs correcto!
+
+```sql
+-------------------------------------------------
+-- 3. INSERTANDO DATOS EN TABLAS PARTICIONADAS
+-------------------------------------------------
+INSERT INTO VENTAS
+SELECT LEVEL, 'ASIA', SYSDATE
+FROM DUAL CONNECT BY LEVEL < 100000;
+
+INSERT INTO VENTAS
+SELECT LEVEL, 'EUROPA', SYSDATE
+FROM DUAL CONNECT BY LEVEL < 100000;
+```
+
+### Consultas registros
+
+Si hago un * select sin partition no me ayuda en nada.
+- Usar PARTITION
+
+```sql
+-------------------------------------------------
+-- 4. QUERY DE TABLAS PARTICIONADAS
+-------------------------------------------------
+SELECT * FROM VENTAS;
+
+SELECT * FROM VENTAS PARTITION ( ventas_ASIA );
+
+SELECT * FROM VENTAS PARTITION (ventas_EUROPA);
+```
+
+> Mejorar aun mas? subparticionar en N niveles. Podemos segmentar hasta 15 niveles.
+Podriamos paricionar por continente, pais y region, etc.
+
+
+![subparticion](imagenes/subparticion.jpg)
+
+> Debemos agregar indices particionados tambien! 
+
+
+## Tablas Externas
+
+Deseamos incorporar informacion de un archivo txt al oracle
+
+
+### Pasos:
+
+- Crear directorio fisico y poner txt(este tiene campos separados por comas, y registros separados por lineas)
+- Crear directorio oracle (Recordar que el comando no crea la carpeta)
+- Crear pseudotabla
+- Esa tabla esta vinculada al archivo .txt
+- La tabla no almacena nada, pero al consultarla, llama data del archivo externo.
+
+> Este tipo de tablas son de sólo lectura y no permite utilizar manipulación de datos (DML).
+> Finalidad: Incoporar la data que esta afuera, dentro de la BD
+
+
+- Crear directorio oracle
+```sql
+CREATE OR REPLACE DIRECTORY DIR_TXT AS 'C:\TXT';
+```
+
+
+- Ver directorios:
+```sql
+SELECT * FROM DBA_DIRECTORIES;
+```
+
+
+### Crear tabla
+
+- Creamos campos que emulen lo que estan en el txt
+- Organizacion externa:
+    - Definimos directorio
+    - Decimos qe registros estn delimitados por nuevas lineas
+    - Campos separados por compas
+    - Ubicacion del archivo, buscar Empleados.txt. Podrian ser n archivos, separados por comas.
+
+```sql
+
+
+```
+
+> No se guarda info, solo es un vinculo a ese archivo, es una declarcion logica que vincula a esa pseudotabla en ese archivo.
+
+
+### Ver tablas de externa
+
+```sql
+-- 3. LISTA DE TABLAS EXTERNAS
+SELECT * FROM DBA_EXTERNAL_TABLES;
+```
+
+### operaciones select
+
+```sql
+SELECT * FROM EMPLEADOS_EXT
+WHERE BASICO > 3000;
+```
+
+### Creando tabla nueva a partir de esa externa
+
+```sql
+CREATE TABLE TNUEVA AS SELECT * FROM EMPLEADOS_EXT;
+SELECT * FROM TNUEVA;
+```
+
+
+
+## Clusterizada
+
+Agrupa en un solo bloque registros de tablas. Por ejemplo cabecera y detalle.
+
+![particionada](imagenes/clusterizada.jpg)
