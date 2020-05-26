@@ -387,6 +387,8 @@ Podriamos paricionar por continente, pais y region, etc.
 
 ## Tablas Externas
 
+![particionada](imagenes/externas.jpg)
+
 Deseamos incorporar informacion de un archivo txt al oracle
 
 
@@ -395,7 +397,7 @@ Deseamos incorporar informacion de un archivo txt al oracle
 - Crear directorio fisico y poner txt(este tiene campos separados por comas, y registros separados por lineas)
 - Crear directorio oracle (Recordar que el comando no crea la carpeta)
 - Crear pseudotabla
-- Esa tabla esta vinculada al archivo .txt
+- Esa tabla esta vinculada al archivo .txt, .csv, .json, etc.
 - La tabla no almacena nada, pero al consultarla, llama data del archivo externo.
 
 > Este tipo de tablas son de sólo lectura y no permite utilizar manipulación de datos (DML).
