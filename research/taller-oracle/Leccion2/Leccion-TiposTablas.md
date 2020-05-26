@@ -426,8 +426,22 @@ SELECT * FROM DBA_DIRECTORIES;
     - Ubicacion del archivo, buscar Empleados.txt. Podrian ser n archivos, separados por comas.
 
 ```sql
-
-
+CREATE TABLE EMPLEADOS_EXT
+( ID NUMBER(15),
+PATERNO VARCHAR2(50),
+MATERNO VARCHAR2(50),
+NOMBRE VARCHAR2(50),
+CTABANCO VARCHAR2(50),
+BASICO NUMBER(15)
+)
+ORGANIZATION EXTERNAL
+(
+DEFAULT DIRECTORY DIR_TXT
+ACCESS PARAMETERS
+(RECORDS DELIMITED BY NEWLINE
+FIELDS TERMINATED BY &#39;,&#39;
+)
+LOCATION ( &#39;Empleados.txt&#39; ));
 ```
 
 > No se guarda info, solo es un vinculo a ese archivo, es una declarcion logica que vincula a esa pseudotabla en ese archivo.
