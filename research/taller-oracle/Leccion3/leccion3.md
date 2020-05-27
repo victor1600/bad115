@@ -170,12 +170,61 @@ RMAN> BACKUP DATAFILE 'C:\DATA\DF_COMNTA.DBF'
 RMAN> BACKUP DATAFILE 6;
 ```
 
+## Recovery de Tablespace
+
+- ponemos una usb
+- Creamos un tablespace con un datafile en la usb
+- sacamos la usb
+
+```sql
+-- RECOVERY
+-- CASO 1: PERDIDA DE TABLESPACE
+-- CREANDO ESCENARIO
+CREATE TABLESPACE TBS_DATA
+DATAFILE 'E:\DF_DATA.DBF'SIZE 10M;
+
+CREATE TABLE CURSO ( NOMBRE CHAR(50)) TABLESPACE TBS_DATA;
+INSERT INTO CURSO VALUES ( 'AAAAAA' );
+INSERT INTO CURSO VALUES ( 'BBBBBB' );
+INSERT INTO CURSO VALUES ( 'CCCCCCC' );
+COMMIT;
+
+-- SIMULAMOS PERDIDA DE DISCO (QUITAR USB)
+-- INSERTAMOS VALOR CUANDO DISCO YA NO ESTA, NO DARA ERROR, PORQUE ESTA EN MEMORIA
+INSERT INTO CURSO VALUES('DDDDD');
+COMMIT;
+
+-- va a intentar guardar en disco(manda alertas cuando hay error)
+ALTER SYSTEM CHECKPOINT;
+```
+
+### Restaurar
+
+- Entrar a RMAN
+- Startup es un estado, pero dara error porque falta el archivo de disco E.
+- Antes de hacer restore tablespace colocar usb y borrar el archivo, simulando que es un disco nuevo. alli se va a recuperar, en la unidad E.
+- restaurar tbs con restore y recover
+- Abrir la base
+- en toad reconectar sesion
+- Hacer un ```SELECT * FROM CURSO;
+- Veremos que recuparar aun el ultimo insert que hicimos de DDDD (para que esto funcione debe haber sido commiteada la sentencia).
 
 
 
 
+Oracle 12c
+```
 
+cmd> RMAN TARGET /
+...Conectado a bd no iniciada
 
+RMAN> STARTUP MOUNT
+RMAN> RESTORE TABLESPACE TBS_DATA; -- recupera lo fisico, el datafile sin tabla sin registro
+RMAN> RECOVER TABLESPACE TBS_DATA; -- recupera los objetos, tablas, etc
+RMAN> ALTER DATABASE OPEN;
+```
+
+En el TOAD: Session->Reconect
 
 
 
