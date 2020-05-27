@@ -393,6 +393,59 @@ Podriamos paricionar por continente, pais y region, etc.
 - Solucion:
 
 ```sql
+----------------------------------
+-- 1. CREACION DE TBS
+----------------------------------
+CREATE TABLESPACE TBS_AUTOS
+DATAFILE 'C:\TEMP\DF_VEHICULOS_AUTOS.DBF'
+SIZE 100M;
+
+CREATE TABLESPACE TBS_CAMIONETAS
+DATAFILE 'C:\TEMP\DF_VEHICULOS_CAMIONETAS.DBF'
+SIZE 100M;
+
+CREATE TABLESPACE TBS_BUSES
+DATAFILE 'C:\TEMP\DF_VEHICULOS_BUSES.DBF'
+SIZE 100M;
+
+CREATE TABLESPACE TBS_CAMIONES
+DATAFILE 'C:\TEMP\DF_VEHICULOS_CAMIONES.DBF'
+SIZE 100M;
+
+CREATE TABLESPACE TBS_OTROS_VEHICULOS
+DATAFILE 'C:\TEMP\DF_VEHICULOS_OTROS_VEHICULOS.DBF'
+SIZE 100M;
+----------------------------------
+-- 2. CREAR TABLAS
+----------------------------------
+CREATE TABLE VEHICULOS(
+    ID NUMERIC(10),
+    TIPO VARCHAR(10),
+    AÑO INTEGER,
+    PLACA VARCHAR(10)
+) PARTITION BY LIST(TIPO)
+(
+    PARTITION vehiculos_AUTOS VALUES('AUTO') tablespace TBS_AUTOS,
+    PARTITION vehiculos_CAMIONETAS VALUES('CAMIONETA') tablespace TBS_CAMIONETAS,
+    PARTITION vehiculos_BUSES VALUES('BUS') tablespace TBS_BUSES,
+    PARTITION vehiculos_CAMIONES VALUES('CAMION') tablespace TBS_CAMIONES,
+    PARTITION vehiculos_otros VALUES(DEFAULT) tablespace TBS_OTROS_VEHICULOS
+    
+);
+
+----------------------------------
+-- 3. INSERCION
+----------------------------------
+INSERT INTO VEHICULOS
+SELECT LEVEL, 'BUS', ROUND(dbms_random.value(1950,2020)), DBMS_RANDOM.string('x',10)
+FROM DUAL CONNECT BY LEVEL < 25000;
+
+SELECT * FROM VEHICULOS PARTITION (vehiculos_AUTOS);
+
+INSERT INTO VEHICULOS
+SELECT LEVEL, 'MOTO', ROUND(dbms_random.value(1950,2020)), DBMS_RANDOM.string('x',10)
+FROM DUAL CONNECT BY LEVEL < 250000;
+-- el resultado de esta query se guarda en la particion tbs_otros_vehiculos
 
 ```
 
