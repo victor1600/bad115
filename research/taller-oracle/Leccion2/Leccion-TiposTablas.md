@@ -385,6 +385,18 @@ Podriamos paricionar por continente, pais y region, etc.
 > Debemos agregar indices particionados tambien! 
 
 
+
+
+### Ejercicio (Requerimiento)
+![subparticion](imagenes/requerimiento.jpg)
+
+- Solucion:
+
+```sql
+
+```
+
+
 ## Tablas Externas
 
 ![particionada](imagenes/externas.jpg)
