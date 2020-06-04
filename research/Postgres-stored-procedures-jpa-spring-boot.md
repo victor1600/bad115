@@ -1,7 +1,7 @@
-# Stored procedures en Spring Boot Jpa con Postgres, ejemplo con Medicamentos
+# Stored procedures en Spring Boot Jpa con Postgres: ejemplo con Medicamentos
 Se hara un ejemplo usando las tablas Medicamento y TipoMedicamento.
 
-- Creacion de tablas
+### Tablas a usarse
 ```sql
 CREATE TABLE db_tipo_medicamento
 (
@@ -44,6 +44,7 @@ values ('d7ba3ad5-b93b-4cfa-a22c-0f051b889ae5', 25, 'ABCD', 'cada 8 horas', 'ace
 - El Nombre del medicamento debe ser unico.
 - El codigo del medicamento debe ser unico.
 
+## Ejemplo 1: Procedimiento que devuelve un STRING indicando la razón de si se puede insertar o no un medicamento en la base.
 
 ### Creando el procedimiento almacenado
 
@@ -165,6 +166,64 @@ DateFormat fechaFormat = new SimpleDateFormat("HH:mm:ss dd/MM/yyyy");
 
         }
 ```
+## Ejemplo 2: Creando un procedimiento que devuelva los medicamentos de acuerdo a un id de tipo de medicamento.
+
+### Creando el Procedimiento almacenado
+Basado en ejemplo en documentacion: [SQL Functions Returning Set](https://www.postgresql.org/docs/9.2/xfunc-sql.html).
+
+- Se manda un argumento de tipo UUID que corresponde con el id de la llave a buscar.
+- se devuelve un ```setof``` del tipo ```db_medicamento```, si se omite el setof solo se devolveria un registro.
+- Especificamos que sera ```LANGUAGE sql;```
+
+
+```postgresql
+CREATE OR REPLACE FUNCTION test1(p_id_tipo uuid) RETURNS setof db_medicamento
+AS
+$$
+SELECT *
+FROM db_medicamento
+where id_tipo_medicamento = p_id_tipo;
+$$
+    LANGUAGE sql;
+```
+
+### Llamando el SP desde la base
+
+```sql
+SELECT *
+from test1('0926dd9f-6a27-4e1c-aec8-ae060797d525');
+```
+
+### En el repository
+- El parametro de entrada que se manda dentro de ```@Query``` debera ir precedido por ```:```.
+
+```java
+@Query(value = "SELECT * from test1(:p_id_tipo);", nativeQuery = true)
+    List<MedicamentoModel> test(@Param("p_id_tipo") UUID p_id_tipo);
+```
+
+### En el service
+
+```java
+public  List<MedicamentoModel> test( UUID p_id_tipo){
+        return repository.test(p_id_tipo);
+    }
+```
+
+### Funcion de prueba en el controller
+```java
+@CrossOrigin(origins = "http://localhost:3000")
+    @GetMapping("/fk/{id}")
+    public ResponseEntity fk_getter(@PathVariable UUID id) {
+        DetalleResponseHttp detalle = new DetalleResponseHttp();
+        List<MedicamentoModel> test = service.test(id);
+        System.out.println(test);
+
+        return new ResponseEntity(test, HttpStatus.NOT_FOUND);
+
+    }
+```
+
 
 ### Anexo: importando tablas desde la Base de Datos hacia Java
 
