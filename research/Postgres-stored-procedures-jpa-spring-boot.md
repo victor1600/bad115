@@ -1,4 +1,4 @@
-# Stored procedures en Spring Boot Jpa con Postgres: ejemplo con Medicamentos
+# Stored procedures en Spring Boot Jpa con Postgres: Ejemplo con Medicamentos
 Se hara un ejemplo usando las tablas Medicamento y TipoMedicamento.
 
 ### Tablas a usarse
