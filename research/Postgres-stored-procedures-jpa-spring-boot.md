@@ -187,7 +187,7 @@ $$
     LANGUAGE sql;
 ```
 
-### Llamando el SP desde la base
+#### Probando el SP
 
 ```sql
 SELECT *
