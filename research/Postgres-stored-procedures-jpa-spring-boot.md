@@ -169,7 +169,7 @@ DateFormat fechaFormat = new SimpleDateFormat("HH:mm:ss dd/MM/yyyy");
 ## Ejemplo 2: Creando un procedimiento que devuelva los medicamentos de acuerdo a un id de tipo de medicamento.
 
 ### Creando el Procedimiento almacenado
-Basado en ejemplo en documentacion: [SQL Functions Returning Set](https://www.postgresql.org/docs/9.2/xfunc-sql.html).
+
 
 - Se manda un argumento de tipo UUID que corresponde con el id de la llave a buscar.
 - se devuelve un ```setof``` del tipo ```db_medicamento```, si se omite el setof solo se devolveria un registro.
@@ -236,3 +236,8 @@ public  List<MedicamentoModel> test( UUID p_id_tipo){
 - Definir segun los campos deseados(Por ejemplo, cambiar object por UUID en los ids):
 
 ![persistence](imagenes/persistence.png)
+
+#### Referencias
+- [Llamando Procedimientos almacenados JPA](https://www.baeldung.com/spring-data-jpa-stored-procedures)
+- [Creacion de SP en Postgres](https://www.postgresqltutorial.com/postgresql-stored-procedures/)
+- [Devoler una tabla como resultado de un SP](https://www.postgresql.org/docs/9.2/xfunc-sql.html)
