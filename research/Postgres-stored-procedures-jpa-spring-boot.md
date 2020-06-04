@@ -193,6 +193,7 @@ $$
 SELECT *
 from test1('0926dd9f-6a27-4e1c-aec8-ae060797d525');
 ```
+## Llamando el SP desde Spring Boot
 
 ### En el repository
 - El parametro de entrada que se manda dentro de ```@Query``` debera ir precedido por ```:```.
