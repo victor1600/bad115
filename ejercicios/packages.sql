@@ -52,6 +52,14 @@ end;
 -------------------------------------------
 ----- CREACION Y USO DE PAQUETES SIN CUERPO
 ------------------------------------------
+    CREATE OR REPLACE PACKAGE global_consts IS
+    c_mile_2_kilo CONSTANT NUMBER := 1.6093;
+    c_kilo_2_mile CONSTANT NUMBER := 0.62;
+    c_yard_2_meter CONSTANT NUMBER := 0.9144;
+    c_meter_2_yard CONSTANT NUMBER := 1.0936;
+END global_consts;
 
-CREATE TABLESPACE tbs_pruebas
-DATAFILE '/home/oracle/tbs/DF_PRUEBAS_01.DBF' SIZE 100M;
+BEGIN
+    DBMS_OUTPUT.PUT_LINE('20 MILES = ' ||
+                         20 * global_consts.c_kilo_2_mile || ' km');
+end;
