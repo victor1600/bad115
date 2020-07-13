@@ -7,7 +7,9 @@ Markdown sirve para hacer documentacion y crear snippets de codigo facilmente.
 
 ## Resumen de clases para parcial 2
 
-[Resumen](https://onedrive.live.com/view.aspx?resid=1B3942C0D44A30C9!6884&ithint=file%2cdocx&authkey=!AJPwzXjhvCFXfmM)
+[Packs](https://1drv.ms/u/s!AqX1_gSRZ6K7jhyLAWVhcZ8UnzY1?e=gGc7F1)
+
+
 [pack parcial 2](https://1drv.ms/b/s!AqX1_gSRZ6K7jhu70_jg5ICCRG_b?e=g0Ozgf)
 
 
