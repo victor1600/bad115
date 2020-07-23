@@ -16,7 +16,7 @@ docker run -d -p 1521:1521 --name oracle store/oracle/database-enterprise:12.2.0
 ```
 or
 ```shell script
-docker run -d -p 8081:8081 -p 1521:1521 --name oracle-db store/oracle/database-enterprise:12.2.0.1
+docker run -d -p 8081:8081 -p 1521:1521 --name oracle store/oracle/database-enterprise:12.2.0.1
 ```
 
 - Wait for the container to be in healthy status
